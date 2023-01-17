@@ -97,41 +97,31 @@ function turnHoursToMinutes(moviesArray) {
 
 // BONUS - Iteration 8: Best yearly score average - Best yearly score average
 function bestYearAvg(moviesArray) {
-  if (moviesArray.length === 0) {
-    return null;
-  } else {
-    const cloneArray = JSON.parse(JSON.stringify(moviesArray));
-    //GROUP MOVIES BY YEAR
-    cloneArray.sort((a, b) => a.year - b.year);
-    let groupedArr = [];
-    while (cloneArray.length > 0) {
-      let year = cloneArray[0].year;
-      let sameYear = cloneArray.filter((movie) => movie.year === year);
-      groupedArr.push(sameYear);
-      cloneArray.splice(0, sameYear.length);
-    }
-    //CALC AVERAGE SCORES PER YEAR
-    let averageScores = groupedArr.map((group) => {
-      const sumScore = group
-        .filter((element) => element.score)
-        .reduce((acc, cur) => acc + cur.score, 0);
-      if (group.length === 0) {
-        return 0;
-      } else {
-        return Math.round((sumScore / group.length) * 100) / 100;
-      }
-    });
-    //FIND HIGHEST SCORE
-    let highestScore = averageScores[0];
-    let indexOfHighest = 0;
-    for (let i = 0; i < averageScores.length; i++) {
-      if (averageScores[i] > highestScore) {
-        highestScore = averageScores[i];
-        indexOfHighest = i;
-      }
-    }
-    const bestYear = groupedArr[indexOfHighest][0].year;
-
-    return `The best year was ${bestYear} with an average score of ${highestScore}`;
+  if (moviesArray.length === 0) return null;
+  const cloneArray = JSON.parse(JSON.stringify(moviesArray));
+  //GROUP MOVIES BY YEAR
+  cloneArray.sort((a, b) => a.year - b.year);
+  let groupedArr = [];
+  while (cloneArray.length > 0) {
+    let year = cloneArray[0].year;
+    let sameYear = cloneArray.filter((movie) => movie.year === year);
+    groupedArr.push(sameYear);
+    cloneArray.splice(0, sameYear.length);
   }
+  //CALC AVERAGE SCORES PER YEAR
+  let averageScores = groupedArr.map((group) => {
+    return scoresAverage(group);
+  });
+  //FIND HIGHEST SCORE
+  let highestScore = averageScores[0];
+  let indexOfHighest = 0;
+  for (let i = 0; i < averageScores.length; i++) {
+    if (averageScores[i] > highestScore) {
+      highestScore = averageScores[i];
+      indexOfHighest = i;
+    }
+  }
+  const bestYear = groupedArr[indexOfHighest][0].year;
+
+  return `The best year was ${bestYear} with an average score of ${highestScore}`;
 }
